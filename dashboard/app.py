@@ -31,11 +31,8 @@ html, body, .stApp, [class*="css"], .stMarkdown, button, input {{font-family:{FO
 .stApp{{background:var(--bg);}}
 #MainMenu, footer, header[data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"]{{display:none!important;}}
 .block-container{{max-width:1120px;padding:1.4rem 1.2rem 2.5rem;}}
-@keyframes rise{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:none}}}}
-@keyframes pop{{0%{{opacity:0;transform:scale(.4)}}70%{{transform:scale(1.08)}}100%{{opacity:1;transform:scale(1)}}}}
-@keyframes grow{{from{{width:0}}}}
 /* brand */
-.brand{{display:flex;align-items:center;gap:14px;margin:2px 0 18px;animation:rise .5s ease both;}}
+.brand{{display:flex;align-items:center;gap:14px;margin:2px 0 18px;}}
 .logo{{width:46px;height:46px;border-radius:14px;background:var(--pink);display:grid;place-items:center;box-shadow:0 6px 18px rgba(194,24,91,.28);}}
 .brand-name{{font-weight:800;font-size:1.25rem;color:var(--ink);letter-spacing:-.01em;line-height:1.1;}}
 .brand-sub{{color:var(--muted);font-size:.88rem;font-weight:500;}}
@@ -49,48 +46,47 @@ html, body, .stApp, [class*="css"], .stMarkdown, button, input {{font-family:{FO
 .stTabs [role="tab"][aria-selected="true"]{{background:var(--pink)!important;border-color:var(--pink)!important;box-shadow:0 6px 16px rgba(194,24,91,.25);}}
 .stTabs [role="tab"][aria-selected="true"] p, .stTabs [role="tab"][aria-selected="true"] span{{color:#fff!important;}}
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"], .stTabs .react-aria-SelectionIndicator{{display:none!important;}}
-.stTabs [role="tabpanel"]{{padding-top:14px;animation:rise .45s ease both;}}
+.stTabs [role="tabpanel"]{{padding-top:14px;}}
 /* section header */
 .eyebrow{{display:inline-flex;align-items:center;gap:8px;color:var(--pink);font-weight:700;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;}}
 .h2{{font-size:2.05rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.15;margin:6px 0 8px;}}
 .lead{{color:var(--ink2);font-size:1.02rem;max-width:62ch;margin:0 0 18px;line-height:1.55;}}
-.head{{animation:rise .5s ease both;}}
+.head{{}}
 /* cards */
-[class*="st-key-card"]{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px 20px 10px;box-shadow:0 1px 2px rgba(31,42,48,.04),0 10px 28px rgba(31,42,48,.06);animation:rise .55s ease both;}}
+[class*="st-key-card"]{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px 20px 10px;box-shadow:0 1px 2px rgba(31,42,48,.04),0 10px 28px rgba(31,42,48,.06);}}
 .card-title{{font-weight:700;color:var(--ink);font-size:1.02rem;display:flex;align-items:center;gap:8px;margin-bottom:2px;}}
 .card-sub{{color:var(--muted);font-size:.86rem;margin-bottom:4px;}}
 .note{{color:var(--muted);font-size:.8rem;margin:2px 0 8px;}}
 /* KPI cards */
 .kpis{{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}}
 .kpis.k3{{grid-template-columns:repeat(3,1fr);}}
-.kpi{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px 18px 16px;box-shadow:0 10px 28px rgba(31,42,48,.06);animation:rise .6s ease both;animation-delay:var(--d,0s);}}
+.kpi{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px 18px 16px;box-shadow:0 10px 28px rgba(31,42,48,.06);}}
 .kpi-ic{{width:38px;height:38px;border-radius:12px;background:var(--pink-xl);display:grid;place-items:center;margin-bottom:10px;}}
 .kpi-val{{font-size:2.25rem;font-weight:800;color:var(--pink);letter-spacing:-.02em;line-height:1.05;}}
 .kpi-val.dark{{color:var(--ink);}}
 .kpi-lab{{color:var(--ink2);font-size:.92rem;margin-top:4px;line-height:1.35;}}
 /* overview */
 .overview{{display:grid;grid-template-columns:1fr 1.25fr;gap:16px;align-items:stretch;}}
-.waffle-card{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 28px rgba(31,42,48,.06);animation:rise .55s ease both;display:flex;flex-direction:column;justify-content:center;}}
+.waffle-card{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 28px rgba(31,42,48,.06);display:flex;flex-direction:column;justify-content:center;}}
 .waffle{{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;max-width:330px;margin:0 auto;width:100%;}}
-.cell{{aspect-ratio:1;border-radius:5px;background:{GREY_L};animation:pop .45s ease both;}}
+.cell{{aspect-ratio:1;border-radius:5px;background:{GREY_L};}}
 .cell.on{{background:var(--pink);}}
 .waffle-cap{{text-align:center;color:var(--ink2);margin-top:14px;font-size:.95rem;}}
 .waffle-cap b{{color:var(--pink);font-size:1.15rem;}}
 /* CTA */
-.cta{{margin-top:22px;display:flex;align-items:center;gap:16px;background:var(--pink);color:#fff;border-radius:22px;padding:18px 22px;box-shadow:0 14px 34px rgba(194,24,91,.28);animation:rise .6s ease both;}}
+.cta{{margin-top:22px;display:flex;align-items:center;gap:16px;background:var(--pink);color:#fff;border-radius:22px;padding:18px 22px;box-shadow:0 14px 34px rgba(194,24,91,.28);}}
 .cta-ic{{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center;flex:0 0 48px;}}
 .cta-txt{{flex:1;line-height:1.35;}} .cta-txt b{{font-size:1.12rem;display:block;}} .cta-txt span{{opacity:.92;font-size:.92rem;}}
 .cta-btn{{background:#fff;color:var(--pink)!important;text-decoration:none!important;font-weight:700;border-radius:999px;padding:10px 16px;display:inline-flex;gap:8px;align-items:center;white-space:nowrap;transition:transform .2s ease;}}
 .cta-btn:hover{{transform:translateY(-2px);}}
 .segbar{{display:flex;height:46px;border-radius:12px;overflow:hidden;margin:10px 0 8px;gap:3px;}}
-.seg{{display:grid;place-items:center;font-weight:800;font-size:1rem;transform-origin:left;animation:sx .8s cubic-bezier(.2,.8,.2,1) both;}}
-@keyframes sx{{from{{transform:scaleX(0);opacity:.3}}to{{transform:none;opacity:1}}}}
+.seg{{display:grid;place-items:center;font-weight:800;font-size:1rem;transform-origin:left;}}
 .segkey{{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--ink2);font-size:.86rem;margin-bottom:6px;}}
 .segkey i{{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;}}
 .foot{{color:var(--muted);font-size:.78rem;margin-top:14px;text-align:center;}}
 /* about */
 .src{{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}}
-.src a{{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;text-decoration:none!important;color:var(--ink)!important;transition:all .2s ease;animation:rise .5s ease both;animation-delay:var(--d,0s);}}
+.src a{{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;text-decoration:none!important;color:var(--ink)!important;transition:all .2s ease;}}
 .src a:hover{{border-color:var(--pink);transform:translateY(-2px);}}
 .src .si{{width:34px;height:34px;border-radius:10px;background:var(--pink-xl);display:grid;place-items:center;flex:0 0 34px;}}
 .src b{{display:block;font-size:.95rem;}} .src span{{color:var(--muted);font-size:.84rem;}}
@@ -159,16 +155,16 @@ t_over, t_time, t_world, t_age, t_stage, t_about = st.tabs([
 with t_over:
     header("The big picture", "heart-pulse", "Breast cancer is the #1 cancer in Lebanese women",
            "Four in every ten cancers diagnosed in Lebanese women are breast cancer. Found in time and treated, 80–90% of women are cured.")
-    cells = "".join(f'<div class="cell{" on" if i < 40 else ""}" style="animation-delay:{i * 0.012:.3f}s"></div>' for i in range(100))
+    cells = "".join(f'<div class="cell{" on" if i < 40 else ""}"></div>' for i in range(100))
     ratio = y24.cases / y05.cases
     html(f"""<div class="overview">
       <div class="waffle-card"><div class="waffle">{cells}</div>
         <div class="waffle-cap"><b>{y24.share_of_women_cancers_pct:.0f}</b> of every 100 new cancers in women are breast cancer (2024)</div></div>
       <div class="kpis">
-        {kpi(f"{int(y24.cases):,}", "women diagnosed in 2024", "users", .10)}
-        {kpi(f"×{ratio:.1f}", f"more cases than in 2005 ({int(y05.cases):,})", "trending-up", .18)}
-        {kpi("1 in 4", "women diagnosed before age 50", "user-round", .26)}
-        {kpi("1 in 3", "women still found at a late stage", "clock", .34)}
+        {kpi(f"{int(y24.cases):,}", "women diagnosed in 2024", "users", .10, dark=True)}
+        {kpi(f"×{ratio:.1f}", f"more cases than in 2005 ({int(y05.cases):,})", "trending-up", .18, dark=True)}
+        {kpi("1 in 4", "women diagnosed before age 50", "user-round", .26, dark=True)}
+        {kpi("1 in 3", "women still found at a late stage", "clock", .34, dark=True)}
       </div></div>""")
 
 # ================================================================== OVER TIME
@@ -214,7 +210,7 @@ with t_time:
         html(f'<div class="card-title">{icon("search", 18, PINK, 2.4)}Why did cases grow?</div>'
              '<div class="card-sub">Share of the 2,300 extra cases a year between 2005 and 2024</div>')
         parts = [("More women", dec.iloc[0], GREY_L, INK2), ("Older population", dec.iloc[1], GREY, INK), ("Higher rate", dec.iloc[2], PINK, "#fff")]
-        segs = "".join(f'<div class="seg" style="flex:{v:.1f};background:{c};color:{tc};animation-delay:{.15 * i:.2f}s">{pct(v)}</div>'
+        segs = "".join(f'<div class="seg" style="flex:{v:.1f};background:{c};color:{tc}">{pct(v)}</div>'
                        for i, (n, v, c, tc) in enumerate(parts))
         keys = "".join(f'<span><i style="background:{c}"></i>{n}</span>' for n, v, c, tc in parts)
         html(f'<div class="segbar">{segs}</div><div class="segkey">{keys}</div>')
@@ -260,6 +256,17 @@ with t_age:
         {kpi(f"{int(y24.men_cases)} men", "diagnosed in 2024. Men get breast cancer too", "user-round", .18, dark=True)}
     </div>""")
 
+    # Warning signs, paraphrased from the WHO breast cancer fact sheet
+    signs = ["A lump or thickening in the breast, often painless", "A change in the size, shape or look of the breast",
+             "Dimpling, redness or pitting of the skin", "A change in the nipple or the skin around it", "Fluid or blood from the nipple"]
+    html('<div style="height:14px"></div>')
+    with st.container(border=False, key="card_signs"):
+        dot = icon("scan-search", 18, PINK, 2.2)
+        html(f'<div class="card-title">{icon("hand-heart", 18, PINK, 2.4)}Know the signs, at any age</div>'
+             '<div class="card-sub">See a doctor if you notice any of these. Most lumps are not cancer, but every change is worth a check.</div>'
+             '<ul class="checks">' + "".join(f"<li>{dot}<span>{x}</span></li>" for x in signs) + '</ul>'
+             '<div class="note">Source: World Health Organization, breast cancer fact sheet.</div>')
+
 # ================================================================== STAGE & REGION
 with t_stage:
     header("Stage at diagnosis", "map-pin", "Too many women are found late",
@@ -268,7 +275,7 @@ with t_stage:
         html(f'<div class="card-title">{icon("clock", 18, PINK, 2.4)}Today: about 1 in 3 found late</div>'
              '<div class="card-sub">Diagnosed at an advanced stage · Ministry of Public Health early-detection committee, October 2026</div>'
              f'<div class="segbar"><div class="seg" style="flex:2;background:{GREY_L};color:{INK2}">2 in 3 early</div>'
-             f'<div class="seg" style="flex:1;background:{PINK};color:#fff;animation-delay:.15s">1 in 3 late</div></div>')
+             f'<div class="seg" style="flex:1;background:{PINK};color:#fff">1 in 3 late</div></div>')
     html('<div style="height:14px"></div>')
 
     c1, c2 = st.columns([1, 1.1], gap="medium")
@@ -348,6 +355,7 @@ with t_about:
         ("users", "World Bank population estimates", "Female population by age, used to recalculate rates", "https://data.worldbank.org/indicator/SP.POP.TOTL.FE.IN?locations=LB"),
         ("map-pin", "Eastern Mediterranean Health Journal 2021 · stage at diagnosis", "3,320 women, 2012–2017, by region and age", "https://applications.emro.who.int/EMHJ/V27/06/1020-3397-2021-2706-580-586-eng.pdf"),
         ("sparkles", "AUB Medical Center staging study", "Stage before and after screening campaigns", "https://pmc.ncbi.nlm.nih.gov/articles/PMC7785066"),
+        ("hand-heart", "World Health Organization · breast cancer fact sheet", "Warning signs to watch for", "https://www.who.int/news-room/fact-sheets/detail/breast-cancer"),
         ("calendar-check", "Ministry of Public Health · Breast Cancer Campaign 2026", "Screening age, free mammograms, hotline 1214", "https://www.moph.gov.lb/en/Pages/0/87129/national-breast-cancer-awareness-campaign-2026"),
     ]
     html('<div class="src">' + "".join(
