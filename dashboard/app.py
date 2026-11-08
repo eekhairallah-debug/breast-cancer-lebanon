@@ -150,9 +150,10 @@ def kpi(val, label, ico, delay=0.0, dark=False):
 html(f"""<div class="brand"><div class="logo">{icon("ribbon", 26, "#fff", 2.2)}</div>
          <div><div class="brand-name">Breast Cancer in Lebanon: <span style="color:var(--pink);white-space:nowrap">The Numbers</span></div><div class="brand-sub">Official data, 2005–2024 · what it means for you</div></div></div>""")
 
-t_over, t_time, t_age, t_stage, t_world, t_about = st.tabs([
-    ":material/home: Overview", ":material/show_chart: Over time", ":material/groups: Age",
-    ":material/location_on: Stage & region", ":material/public: Lebanon vs world", ":material/info: About the data"])
+# Tab order follows the story spine: scale > vs the world > age > found late > early detection works (then the call to action)
+t_over, t_time, t_world, t_age, t_stage, t_about = st.tabs([
+    ":material/home: Overview", ":material/show_chart: Over time", ":material/public: Lebanon vs world",
+    ":material/groups: Age", ":material/location_on: Stage & region", ":material/info: About the data"])
 
 # ================================================================== OVERVIEW
 with t_over:
