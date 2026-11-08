@@ -186,7 +186,7 @@ with t_time:
             fig.add_trace(go.Scatter(x=[2005, 2024], y=[y05.cases, y24.cases], mode="markers+text", marker=dict(size=11, color=PINK, line=dict(color="#fff", width=2.5)),
                                      text=[f"{int(y05.cases):,}", f"{int(y24.cases):,}"], textposition=["bottom right", "top center"],
                                      textfont=dict(size=15, color=PINK, family=FONT), hoverinfo="skip", cliponaxis=False))
-            for yr, lab in [(2016, "Registry dip"), (2020, "COVID-19")]:
+            for yr, lab in [(2016, "Fewer cases recorded"), (2020, "COVID-19")]:
                 fig.add_annotation(x=yr, y=Y.loc[yr, "cases"], text=lab, showarrow=True, arrowhead=0, arrowcolor=GREY, ay=36, ax=0,
                                    font=dict(size=11, color=MUTED))
             layout(fig, 380, yaxis=dict(range=[0, 4400], tickformat=",", title=None))
