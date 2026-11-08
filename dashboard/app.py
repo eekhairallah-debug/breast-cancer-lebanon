@@ -181,7 +181,7 @@ with t_time:
         yrs = Y.index.tolist()
         fig = go.Figure()
         if view == "Women diagnosed":
-            fig.add_trace(go.Scatter(x=yrs, y=Y.cases, mode="lines", line=dict(color=PINK, width=3.5, shape="spline", smoothing=.6),
+            fig.add_trace(go.Scatter(x=yrs, y=Y.cases, mode="lines", line=dict(color=PINK, width=3.5, shape="linear"),
                                      fill="tozeroy", fillcolor="rgba(194,24,91,.08)", hovertemplate="<b>%{x}</b><br>%{y:,} women diagnosed<extra></extra>"))
             fig.add_trace(go.Scatter(x=[2005, 2024], y=[y05.cases, y24.cases], mode="markers+text", marker=dict(size=11, color=PINK, line=dict(color="#fff", width=2.5)),
                                      text=[f"{int(y05.cases):,}", f"{int(y24.cases):,}"], textposition=["bottom right", "top center"],
@@ -192,7 +192,7 @@ with t_time:
             layout(fig, 380, yaxis=dict(range=[0, 4400], tickformat=",", title=None))
             caption = "Women diagnosed with breast cancer each year. Source: Lebanese MoPH National Cancer Registry."
         else:
-            fig.add_trace(go.Scatter(x=yrs, y=Y.asr_recalculated, mode="lines", line=dict(color=PINK, width=3.5, shape="spline", smoothing=.6),
+            fig.add_trace(go.Scatter(x=yrs, y=Y.asr_recalculated, mode="lines", line=dict(color=PINK, width=3.5, shape="linear"),
                                      hovertemplate="<b>%{x}</b><br>%{y:.1f} per 100,000 women<extra></extra>"))
             fig.add_trace(go.Scatter(x=[2024], y=[y24.asr_recalculated], mode="markers+text", marker=dict(size=11, color=PINK, line=dict(color="#fff", width=2.5)),
                                      text=[f"{y24.asr_recalculated:.0f}"], textposition="top center", textfont=dict(size=15, color=PINK), hoverinfo="skip", cliponaxis=False))
