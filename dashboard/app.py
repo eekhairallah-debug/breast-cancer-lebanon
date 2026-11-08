@@ -194,13 +194,18 @@ with t_time:
         else:
             fig.add_trace(go.Scatter(x=yrs, y=Y.asr_recalculated, mode="lines", line=dict(color=PINK, width=3.5, shape="spline", smoothing=.6),
                                      hovertemplate="<b>%{x}</b><br>%{y:.1f} per 100,000 women<extra></extra>"))
-            fig.add_hline(y=47.8, line=dict(color=INK, width=1.5, dash="dot"))
-            fig.add_annotation(x=2005, y=47.8, xanchor="left", yanchor="bottom", text="World average (2024): 47.8", showarrow=False, font=dict(size=12, color=INK))
             fig.add_trace(go.Scatter(x=[2024], y=[y24.asr_recalculated], mode="markers+text", marker=dict(size=11, color=PINK, line=dict(color="#fff", width=2.5)),
                                      text=[f"{y24.asr_recalculated:.0f}"], textposition="top center", textfont=dict(size=15, color=PINK), hoverinfo="skip", cliponaxis=False))
-            layout(fig, 380, yaxis=dict(range=[0, 125], title=None))
-            caption = "Age-standardised rate, recalculated with World Bank population estimates so every year uses the same base."
-        fig.update_xaxes(dtick=3, tick0=2005)
+            # 2024 reference points from GLOBOCAN (a single year, so markers rather than a line across all years)
+            G = D["world"].set_index("country")["asr_incidence_female"]
+            for val, lab, col, sym in [(G["Lebanon"], "GLOBOCAN", PINK, "circle-open"), (G["World"], "World", INK, "circle")]:
+                fig.add_trace(go.Scatter(x=[2024], y=[val], mode="markers+text", marker=dict(size=10, color=col, symbol=sym, line=dict(width=2, color=col)),
+                                         text=[f" {lab} {val:.0f}"], textposition="middle right", textfont=dict(size=12, color=col), cliponaxis=False,
+                                         hovertemplate=f"<b>2024</b><br>{lab}: {val:.1f} per 100,000 women (GLOBOCAN)<extra></extra>"))
+            layout(fig, 380, yaxis=dict(range=[0, 125], title=None), xaxis=dict(range=[2004.5, 2024.6]), margin=dict(l=6, r=105, t=12, b=6))
+            caption = ("Line: age-standardised rate from registered cases, recalculated with World Bank population so every year uses the same base. "
+                       "2024 markers: GLOBOCAN's modelled estimate for Lebanon and the world average. Either way, Lebanon's rate is about double the world's.")
+        fig.update_xaxes(dtick=3 if view == "Women diagnosed" else 5, tick0=2005, tickangle=0)
         st.plotly_chart(fig, config=CFG)
         html(f'<div class="note">{caption}</div>')
 
