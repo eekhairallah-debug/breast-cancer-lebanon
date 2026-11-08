@@ -13,7 +13,7 @@ st.set_page_config(page_title="Breast Cancer in Lebanon: The Numbers", page_icon
 
 # ------------------------------------------------------------------ design tokens
 PINK, PINK_D, PINK_L, PINK_XL = "#C2185B", "#880E4F", "#F48FB1", "#FCE8EF"
-INK, INK2, MUTED, GREY, GREY_L, LINE, BG = "#1F2A30", "#455A64", "#78909C", "#B0BEC5", "#DCE2E5", "#E6EAEC", "#F6F7F8"
+INK, INK2, MUTED, GREY, GREY_L, LINE, BG = "#1F2A30", "#455A64", "#5E7383", "#B0BEC5", "#DCE2E5", "#E6EAEC", "#F6F7F8"
 FONT = "Plus Jakarta Sans, Inter, Segoe UI, Arial, sans-serif"
 CFG = {"displayModeBar": False, "responsive": True}
 DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -190,7 +190,7 @@ with t_time:
                 fig.add_annotation(x=yr, y=Y.loc[yr, "cases"], text=lab, showarrow=True, arrowhead=0, arrowcolor=GREY, ay=36, ax=0,
                                    font=dict(size=11, color=MUTED))
             layout(fig, 380, yaxis=dict(range=[0, 4400], tickformat=",", title=None))
-            caption = "Women diagnosed with breast cancer each year. Source: Lebanese MoPH National Cancer Registry."
+            caption = "Women diagnosed with breast cancer each year. Source: Lebanese Ministry of Public Health, National Cancer Registry."
         else:
             fig.add_trace(go.Scatter(x=yrs, y=Y.asr_recalculated, mode="lines", line=dict(color=PINK, width=3.5, shape="linear"),
                                      hovertemplate="<b>%{x}</b><br>%{y:.1f} per 100,000 women<extra></extra>"))
@@ -203,8 +203,8 @@ with t_time:
                                          text=[f" {lab} {val:.0f}"], textposition="middle right", textfont=dict(size=12, color=col), cliponaxis=False,
                                          hovertemplate=f"<b>2024</b><br>{lab}: {val:.1f} per 100,000 women (GLOBOCAN)<extra></extra>"))
             layout(fig, 380, yaxis=dict(range=[0, 125], title=None), xaxis=dict(range=[2004.5, 2024.6]), margin=dict(l=6, r=105, t=12, b=6))
-            caption = ("Line: age-standardised rate from registered cases, recalculated with World Bank population so every year uses the same base. "
-                       "2024 markers: GLOBOCAN's modelled estimate for Lebanon and the world average. Either way, Lebanon's rate is about double the world's.")
+            caption = ("Line: rate adjusted for age, from registered cases, recalculated with World Bank population so every year uses the same base. "
+                       "2024 markers: GLOBOCAN (the WHO cancer agency) modelled estimate for Lebanon and the world average. Either way, Lebanon's rate is about double the world's.")
         fig.update_xaxes(dtick=3 if view == "Women diagnosed" else 5, tick0=2005, tickangle=0)
         st.plotly_chart(fig, config=CFG)
         html(f'<div class="note">{caption}</div>')
@@ -231,8 +231,9 @@ with t_age:
 
     def bar(yr):
         d = A[A.year == yr]
-        return go.Bar(x=d.age_group.str.split("-").str[0], y=d.cases, customdata=d.age_group, marker=dict(color=cols), text=d.cases, textposition="outside",
-                      textfont=dict(size=11, color=MUTED), cliponaxis=False, hovertemplate="Age %{customdata}<br><b>%{y:,}</b> women<extra></extra>")
+        return go.Bar(x=d.age_group.str.split("-").str[0], y=d.cases, customdata=d.age_group, marker=dict(color=cols), textposition="outside",
+                      text=[f"{c:,}" if s < 50 else "" for c, s in zip(d.cases, d.age_start)],  # label only the under-50 bars (the message)
+                      textfont=dict(size=11, color=PINK), cliponaxis=False, hovertemplate="Age %{customdata}<br><b>%{y:,}</b> women<extra></extra>")
 
     def ttl(yr):
         return dict(text=f"<b>{yr}</b>  ·  {pct(Y.loc[yr, 'pct_under_50_known'])} under 50",
@@ -251,21 +252,21 @@ with t_age:
                                  buttons=[dict(label="▶  Play", method="animate",
                                                args=[None, dict(frame=dict(duration=650, redraw=True), transition=dict(duration=450, easing="cubic-in-out"), fromcurrent=False, mode="immediate")])])])
         st.plotly_chart(fig, config=CFG)
-        html('<div class="note">Press Play or drag the slider to watch 2005 → 2024. Pink = under 50. Women under 20 are rare (fewer than 25 a year) and not shown. Source: MoPH National Cancer Registry.</div>')
+        html('<div class="note">Press Play or drag the slider to watch 2005 → 2024. Pink = under 50. Women under 20 are rare (fewer than 25 a year) and not shown. Source: Ministry of Public Health, National Cancer Registry.</div>')
 
     bi = D["band_index"].set_index("year")
     html(f"""<div class="kpis" style="margin-top:14px">
-        {kpi(f"+{bi.loc[2023, 'Under 40'] - 100:.0f}%", "rise in the breast cancer rate for women under 40 since 2006 — the fastest of any age group", "activity", .1)}
+        {kpi(f"+{bi.loc[2023, 'Under 40'] - 100:.0f}%", "rise in the breast cancer rate for women under 40 since 2006 (from 11 to 17 per 100,000) — the fastest of any age group", "activity", .1)}
         {kpi(f"{int(y24.men_cases)} men", "diagnosed in 2024. Men get breast cancer too", "user-round", .18, dark=True)}
     </div>""")
 
 # ================================================================== STAGE & REGION
 with t_stage:
     header("Stage at diagnosis", "map-pin", "Too many women are found late",
-           "About 1 in 3 women is still diagnosed at an advanced stage today (MoPH, 2026). In 2012–2017, late diagnosis was most common in Bekaa and the North.")
+           "About 1 in 3 women is still diagnosed at an advanced stage today (Ministry of Public Health, 2026). In 2012–2017, late diagnosis was most common in Bekaa and the North.")
     with st.container(border=False, key="card_now"):
         html(f'<div class="card-title">{icon("clock", 18, PINK, 2.4)}Today: about 1 in 3 found late</div>'
-             '<div class="card-sub">Diagnosed at an advanced stage · MoPH national early-detection committee, October 2026</div>'
+             '<div class="card-sub">Diagnosed at an advanced stage · Ministry of Public Health early-detection committee, October 2026</div>'
              f'<div class="segbar"><div class="seg" style="flex:2;background:{GREY_L};color:{INK2}">2 in 3 early</div>'
              f'<div class="seg" style="flex:1;background:{PINK};color:#fff;animation-delay:.15s">1 in 3 late</div></div>')
     html('<div style="height:14px"></div>')
@@ -276,7 +277,7 @@ with t_stage:
     with c1:
         with st.container(border=False, key="card_map"):
             html(f'<div class="card-title">{icon("map-pin", 18, PINK, 2.4)}Found late, by region (2012–2017)</div>'
-                 f'<div class="card-sub">Share diagnosed at stage III–IV · older data: 3,320 women in the Ministry\'s cancer drug programme</div>')
+                 f'<div class="card-sub">Share diagnosed at an advanced stage (III–IV) · older data: 3,320 women in the Ministry\'s cancer drug programme</div>')
             fig = go.Figure(go.Bar(y=R.index, x=R.values, orientation="h", marker=dict(color=[PINK if g in top2 else GREY_L for g in R.index]),
                                    text=[pct(v) for v in R.values], textposition="outside", cliponaxis=False,
                                    textfont=dict(size=13, color=[PINK if g in top2 else MUTED for g in R.index]),
@@ -299,13 +300,13 @@ with t_stage:
             layout(fig, 280, barmode="stack", xaxis=dict(visible=False, range=[0, 100]),
                    yaxis=dict(autorange="reversed", tickfont=dict(size=12, color=INK2)), bargap=.35, margin=dict(l=6, r=6, t=6, b=6))
             st.plotly_chart(fig, config=CFG)
-            html('<div class="note">Early = stage I–II, late = stage III–IV. Late diagnoses nearly halved (41% → 22%) after campaigns began at one private Beirut hospital. Different populations — indicative comparison.</div>')
+            html('<div class="note">Early = stage I–II; late = advanced stage (III–IV). Late diagnoses nearly halved (41% → 22%) after campaigns began at one private Beirut hospital. Different populations — indicative comparison.</div>')
 
 # ================================================================== LEBANON VS WORLD
 with t_world:
     header("Lebanon vs the world", "globe", "Double the world's rate — and double its death rate",
            "Lebanon's breast cancer rate is in the European range, yet its death rate is double the world's and well above Cyprus and France.")
-    W = D["world"].sort_values("asr_incidence_female")
+    W = D["world"].sort_values("asr_mortality_female")  # sorted by death rate: Lebanon on top, matching the headline
     colw = [PINK if c == "Lebanon" else (INK if c == "World" else GREY_L) for c in W.country]
     tcol = [PINK if c == "Lebanon" else (INK if c == "World" else MUTED) for c in W.country]
 
@@ -316,19 +317,19 @@ with t_world:
 
     with st.container(border=False, key="card_world"):
         html(f'<div class="card-title">{icon("globe", 18, PINK, 2.4)}Breast cancer per 100,000 women, 2024</div>'
-             '<div class="card-sub">Age-standardised rates · switch between new cases and deaths</div>')
-        fig = go.Figure(data=[wbar("asr_incidence_female")],
+             '<div class="card-sub">Rates adjusted for age, so countries compare fairly · switch between deaths and new cases</div>')
+        fig = go.Figure(data=[wbar("asr_mortality_female")],
                         frames=[go.Frame(data=[wbar("asr_incidence_female")], name="inc", layout=dict(xaxis=dict(range=[0, 120]))),
                                 go.Frame(data=[wbar("asr_mortality_female")], name="mor", layout=dict(xaxis=dict(range=[0, 31])))])
         anim = lambda n: [[n], dict(mode="immediate", frame=dict(duration=650, redraw=True), transition=dict(duration=550, easing="cubic-in-out"))]
-        layout(fig, 420, margin=dict(l=6, r=30, t=52, b=6), xaxis=dict(range=[0, 120], visible=False),
+        layout(fig, 420, margin=dict(l=6, r=30, t=52, b=6), xaxis=dict(range=[0, 31], visible=False),
                yaxis=dict(tickfont=dict(size=13, color=INK2)), bargap=.32, barcornerradius=6,
-               updatemenus=[dict(type="buttons", direction="left", x=0, y=1.14, xanchor="left", yanchor="top", showactive=True, active=0,
+               updatemenus=[dict(type="buttons", direction="left", x=0, y=1.14, xanchor="left", yanchor="top", showactive=True, active=1,
                                  bgcolor="#fff", bordercolor=PINK, font=dict(size=13, color=PINK), pad=dict(r=6, t=0),
                                  buttons=[dict(label="  New cases  ", method="animate", args=anim("inc")),
                                           dict(label="  Deaths  ", method="animate", args=anim("mor"))])])
         st.plotly_chart(fig, config=CFG)
-        html('<div class="note">Source: GLOBOCAN 2024, Cancer Today (IARC/WHO).</div>')
+        html('<div class="note">Source: GLOBOCAN 2024, Cancer Today (WHO cancer agency).</div>')
     L, Wd = W.set_index("country").loc["Lebanon"], W.set_index("country").loc["World"]
     cy = W.set_index("country").loc["Cyprus"]
     html(f"""<div class="kpis k3" style="margin-top:14px">
@@ -342,12 +343,12 @@ with t_about:
     header("About the data", "database", "Where these numbers come from",
            "Every figure on this dashboard comes from an official or peer-reviewed source and was checked before publishing.")
     srcs = [
-        ("database", "Lebanese MoPH National Cancer Registry", "New cases by age and sex, 2005–2024", "https://moph.gov.lb/en/Pages/2/19523/national-cancer-registry"),
-        ("globe", "GLOBOCAN 2024 · Cancer Today (IARC/WHO)", "Rates and deaths for Lebanon, neighbours and the world", "https://gco.iarc.who.int/today/"),
+        ("database", "Lebanese Ministry of Public Health · National Cancer Registry", "New cases by age and sex, 2005–2024", "https://moph.gov.lb/en/Pages/2/19523/national-cancer-registry"),
+        ("globe", "GLOBOCAN 2024 · Cancer Today (WHO cancer agency)", "Rates and deaths for Lebanon, neighbours and the world", "https://gco.iarc.who.int/today/"),
         ("users", "World Bank population estimates", "Female population by age, used to recalculate rates", "https://data.worldbank.org/indicator/SP.POP.TOTL.FE.IN?locations=LB"),
-        ("map-pin", "EMHJ 2021 · stage at diagnosis in Lebanon", "3,320 women, 2012–2017, by region and age", "https://applications.emro.who.int/EMHJ/V27/06/1020-3397-2021-2706-580-586-eng.pdf"),
-        ("sparkles", "AUBMC staging study (PMC7785066)", "Stage before and after screening campaigns", "https://pmc.ncbi.nlm.nih.gov/articles/PMC7785066"),
-        ("calendar-check", "MoPH Breast Cancer Campaign 2026", "Screening age, free mammograms, hotline 1214", "https://www.moph.gov.lb/en/Pages/0/87129/national-breast-cancer-awareness-campaign-2026"),
+        ("map-pin", "Eastern Mediterranean Health Journal 2021 · stage at diagnosis", "3,320 women, 2012–2017, by region and age", "https://applications.emro.who.int/EMHJ/V27/06/1020-3397-2021-2706-580-586-eng.pdf"),
+        ("sparkles", "AUB Medical Center staging study", "Stage before and after screening campaigns", "https://pmc.ncbi.nlm.nih.gov/articles/PMC7785066"),
+        ("calendar-check", "Ministry of Public Health · Breast Cancer Campaign 2026", "Screening age, free mammograms, hotline 1214", "https://www.moph.gov.lb/en/Pages/0/87129/national-breast-cancer-awareness-campaign-2026"),
     ]
     html('<div class="src">' + "".join(
         f'<a href="{u}" target="_blank" style="--d:{0.06 * i:.2f}s"><div class="si">{icon(ic, 18, PINK, 2.2)}</div><div><b>{n}</b><span>{d}</span></div></a>'
