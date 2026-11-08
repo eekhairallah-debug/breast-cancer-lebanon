@@ -76,14 +76,6 @@ html, body, .stApp, [class*="css"], .stMarkdown, button, input {{font-family:{FO
 .cell.on{{background:var(--pink);}}
 .waffle-cap{{text-align:center;color:var(--ink2);margin-top:14px;font-size:.95rem;}}
 .waffle-cap b{{color:var(--pink);font-size:1.15rem;}}
-/* tile map */
-.tiles{{display:grid;grid-template-columns:1fr 1.15fr .95fr;grid-template-rows:repeat(3,96px);gap:8px;margin:8px 0 6px;}}
-.tile{{border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;animation:pop .5s ease both;animation-delay:var(--d,0s);}}
-.tile .tn{{font-weight:600;font-size:.86rem;opacity:.95;}}
-.tile .tv{{font-weight:800;font-size:1.7rem;letter-spacing:-.02em;}}
-.tile.light{{color:var(--ink);}}
-.legend{{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.78rem;margin:4px 0 6px;}}
-.legend .bar{{height:8px;flex:0 0 120px;border-radius:99px;background:linear-gradient(90deg,{PINK_L},{PINK},{PINK_D});}}
 /* CTA */
 .cta{{margin-top:22px;display:flex;align-items:center;gap:16px;background:var(--pink);color:#fff;border-radius:22px;padding:18px 22px;box-shadow:0 14px 34px rgba(194,24,91,.28);animation:rise .6s ease both;}}
 .cta-ic{{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center;flex:0 0 48px;}}
@@ -111,7 +103,6 @@ html, body, .stApp, [class*="css"], .stMarkdown, button, input {{font-family:{FO
   .overview{{grid-template-columns:1fr;}}
   .kpis.k3{{grid-template-columns:1fr 1fr;}} .kpis.k3 .kpi:last-child{{grid-column:span 2;}}
   .kpi{{padding:14px;}} .kpi-val{{font-size:1.75rem;}}
-  .tiles{{grid-template-rows:repeat(3,84px);}} .tile .tv{{font-size:1.35rem;}}
   .cta{{flex-direction:column;align-items:flex-start;}}
   .src{{grid-template-columns:1fr;}}
 }}
@@ -266,43 +257,43 @@ with t_age:
 with t_stage:
     header("Stage at diagnosis", "map-pin", "Too many women are found late",
            "About 1 in 3 women is still diagnosed at an advanced stage today (MoPH, 2026). In 2012–2017, late diagnosis was most common in Bekaa and the North.")
+    with st.container(border=False, key="card_now"):
+        html(f'<div class="card-title">{icon("clock", 18, PINK, 2.4)}Today: about 1 in 3 found late</div>'
+             '<div class="card-sub">Diagnosed at an advanced stage · MoPH national early-detection committee, October 2026</div>'
+             f'<div class="segbar"><div class="seg" style="flex:2;background:{GREY_L};color:{INK2}">2 in 3 early</div>'
+             f'<div class="seg" style="flex:1;background:{PINK};color:#fff;animation-delay:.15s">1 in 3 late</div></div>')
+    html('<div style="height:14px"></div>')
+
     c1, c2 = st.columns([1, 1.1], gap="medium")
-    R = D["stage_region"].set_index("governorate")["late_pct"]
-    lo, hi = R.min(), R.max()
-
-    def tile_color(v):
-        t = (v - lo) / (hi - lo)  # 0..1 → light pink .. deep pink
-        a, b = (0xF4, 0x8F, 0xB1), (0x88, 0x0E, 0x4F)
-        return "#%02X%02X%02X" % tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
-
-    place = {"North Lebanon": "1 / 1 / 2 / 3", "Bekaa": "1 / 3 / 4 / 4", "Beirut": "2 / 1 / 3 / 2", "Mount Lebanon": "2 / 2 / 3 / 3", "South Lebanon": "3 / 1 / 4 / 3"}
-    order = R.sort_values(ascending=False).index.tolist()
-    tiles = "".join(
-        f'<div class="tile{" light" if (R[g] - lo) / (hi - lo) < .35 else ""}" style="grid-area:{place[g]};background:{tile_color(R[g])};--d:{0.08 * order.index(g):.2f}s">'
-        f'<div class="tn">{g}</div><div class="tv">{pct(R[g])}</div></div>' for g in place)
+    R = D["stage_region"].set_index("governorate")["late_pct"].sort_values()  # ascending: highest ends up on top
+    top2 = R.nlargest(2).index
     with c1:
         with st.container(border=False, key="card_map"):
-            html(f'<div class="card-title">{icon("map-pin", 18, PINK, 2.4)}Diagnosed at stage III–IV, by region (2012–2017)</div>'
-                 f'<div class="card-sub">Older data: 3,320 women in the Ministry\'s cancer drug programme. Today\'s national estimate is about 1 in 3.</div>'
-                 f'<div class="tiles">{tiles}</div>'
-                 f'<div class="legend"><span>{lo:.0f}%</span><div class="bar"></div><span>{hi:.0f}%</span><span>· schematic map, not to scale</span></div>')
+            html(f'<div class="card-title">{icon("map-pin", 18, PINK, 2.4)}Found late, by region (2012–2017)</div>'
+                 f'<div class="card-sub">Share diagnosed at stage III–IV · older data: 3,320 women in the Ministry\'s cancer drug programme</div>')
+            fig = go.Figure(go.Bar(y=R.index, x=R.values, orientation="h", marker=dict(color=[PINK if g in top2 else GREY_L for g in R.index]),
+                                   text=[pct(v) for v in R.values], textposition="outside", cliponaxis=False,
+                                   textfont=dict(size=13, color=[PINK if g in top2 else MUTED for g in R.index]),
+                                   hovertemplate="<b>%{y}</b><br>%{x:.1f}% diagnosed at stage III–IV<extra></extra>"))
+            layout(fig, 280, xaxis=dict(visible=False, range=[0, 70]), yaxis=dict(showgrid=False, tickfont=dict(size=13, color=INK2)),
+                   bargap=.3, barcornerradius=6, margin=dict(l=6, r=30, t=6, b=6))
+            st.plotly_chart(fig, config=CFG)
     with c2:
         with st.container(border=False, key="card_hope"):
             html(f'<div class="card-title">{icon("sparkles", 18, PINK, 2.4)}Early detection works</div>'
-                 '<div class="card-sub">Stage at diagnosis where screening campaigns reached women vs the national programme</div>')
+                 '<div class="card-sub">Stage at diagnosis at one private Beirut hospital, before and after screening campaigns, vs the national programme</div>')
             C = D["stage_compare"]
-            labels = ["Private hospital,<br>before campaigns", "Private hospital,<br>after campaigns", "National<br>programme"]
+            labels = ["Before<br>campaigns", "After<br>campaigns", "National<br>programme"]
+            early = (C.stage_I_pct + C.stage_II_pct).round().astype(int)
             fig = go.Figure()
-            for k, nm, col, tc in [("I", "Stage I", "#F8BBD0", INK), ("II", "Stage II", PINK_L, INK), ("III", "Stage III", PINK, "#fff"), ("IV", "Stage IV", PINK_D, "#fff")]:
-                v = C[f"stage_{k}_pct"]
-                fig.add_trace(go.Bar(y=labels, x=v, name=nm, orientation="h", marker=dict(color=col, line=dict(color="#fff", width=1.5)),
-                                     text=[pct(x) if x >= 12 else "" for x in v], textposition="inside", insidetextanchor="middle", textangle=0,
-                                     textfont=dict(color=tc, size=12), hovertemplate=f"{nm}: %{{x:.1f}}%<extra></extra>"))
-            layout(fig, 300, barmode="stack", showlegend=True, legend=dict(orientation="h", y=-0.12, x=0, xanchor="left", traceorder="normal", font=dict(size=12, color=INK2)),
-                   xaxis=dict(visible=False, range=[0, 100]), yaxis=dict(autorange="reversed", tickfont=dict(size=12, color=INK2)), bargap=.35,
-                   margin=dict(l=6, r=6, t=6, b=6))
+            for nm, v, col, tc in [("early", early, GREY_L, INK2), ("late", 100 - early, PINK, "#fff")]:
+                fig.add_trace(go.Bar(y=labels, x=v, name=nm, orientation="h", marker=dict(color=col, line=dict(color="#fff", width=2)),
+                                     text=[f"{x}% {nm}" if x >= 30 else f"{x}%" for x in v], textposition="inside", insidetextanchor="middle", textangle=0,
+                                     textfont=dict(color=tc, size=13), hovertemplate=f"Found {nm}: %{{x}}%<extra></extra>"))
+            layout(fig, 280, barmode="stack", xaxis=dict(visible=False, range=[0, 100]),
+                   yaxis=dict(autorange="reversed", tickfont=dict(size=12, color=INK2)), bargap=.35, margin=dict(l=6, r=6, t=6, b=6))
             st.plotly_chart(fig, config=CFG)
-            html('<div class="note">Stage I diagnoses doubled (14% → 31%) after campaigns began at one private Beirut hospital. Different populations — indicative comparison.</div>')
+            html('<div class="note">Early = stage I–II, late = stage III–IV. Late diagnoses nearly halved (41% → 22%) after campaigns began at one private Beirut hospital. Different populations — indicative comparison.</div>')
 
 # ================================================================== LEBANON VS WORLD
 with t_world:
