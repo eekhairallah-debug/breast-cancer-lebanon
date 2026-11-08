@@ -282,8 +282,8 @@ with t_stage:
         f'<div class="tn">{g}</div><div class="tv">{pct(R[g])}</div></div>' for g in place)
     with c1:
         with st.container(border=False, key="card_map"):
-            html(f'<div class="card-title">{icon("map-pin", 18, PINK, 2.4)}Diagnosed at stage III–IV, by region</div>'
-                 f'<div class="card-sub">2012–2017 · 3,320 women in the Ministry\'s cancer drug programme</div>'
+            html(f'<div class="card-title">{icon("map-pin", 18, PINK, 2.4)}Diagnosed at stage III–IV, by region (2012–2017)</div>'
+                 f'<div class="card-sub">Older data: 3,320 women in the Ministry\'s cancer drug programme. Today\'s national estimate is about 1 in 3.</div>'
                  f'<div class="tiles">{tiles}</div>'
                  f'<div class="legend"><span>{lo:.0f}%</span><div class="bar"></div><span>{hi:.0f}%</span><span>· schematic map, not to scale</span></div>')
     with c2:
@@ -307,7 +307,7 @@ with t_stage:
 # ================================================================== LEBANON VS WORLD
 with t_world:
     header("Lebanon vs the world", "globe", "Double the world's rate — and double its death rate",
-           "Lebanon's breast cancer rate is in the European range, yet it has the highest death rate of the nine places compared.")
+           "Lebanon's breast cancer rate is in the European range, yet its death rate is double the world's and well above Cyprus and France.")
     W = D["world"].sort_values("asr_incidence_female")
     colw = [PINK if c == "Lebanon" else (INK if c == "World" else GREY_L) for c in W.country]
     tcol = [PINK if c == "Lebanon" else (INK if c == "World" else MUTED) for c in W.country]
@@ -336,8 +336,8 @@ with t_world:
     cy = W.set_index("country").loc["Cyprus"]
     html(f"""<div class="kpis k3" style="margin-top:14px">
         {kpi(f"{L.asr_incidence_female:.0f} vs {Wd.asr_incidence_female:.0f}", "new cases per 100,000 women — Lebanon vs world", "trending-up", .1)}
-        {kpi(f"{L.asr_mortality_female:.0f} vs {Wd.asr_mortality_female:.0f}", "deaths per 100,000 women — the highest of the nine compared", "heart-pulse", .18)}
-        {kpi(f"{L.deaths_per_10_cases:.1f}", f"deaths for every 10 new cases (Cyprus: {cy.deaths_per_10_cases:.1f}), a sign of later diagnosis", "clock", .26, dark=True)}
+        {kpi(f"{L.asr_mortality_female:.0f} vs {Wd.asr_mortality_female:.0f}", "deaths per 100,000 women — Lebanon vs world", "heart-pulse", .18)}
+        {kpi(f"{L.deaths_per_10_cases:.1f}", f"deaths for every 10 new cases (Cyprus: {cy.deaths_per_10_cases:.1f}), consistent with later diagnosis and harder access to treatment", "clock", .26, dark=True)}
     </div>""")
 
 # ================================================================== ABOUT
@@ -374,5 +374,5 @@ with t_about:
 
 # ------------------------------------------------------------------ call to action (every tab)
 html(f"""<div class="cta"><div class="cta-ic">{icon("calendar-check", 26, "#fff", 2.2)}</div>
-  <div class="cta-txt"><b>Women 40+: one mammogram a year</b><span>Free at all public hospitals until 8 Oct 2027 — even without symptoms.</span></div>
+  <div class="cta-txt"><b>Women 40+: one mammogram a year</b><span>Free at public hospitals until 8 Oct 2027 — even without symptoms.</span></div>
   <a class="cta-btn" href="tel:1214">{icon("phone", 18, PINK, 2.4)}Hotline 1214</a></div>""")
